@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lecture Search System</title>
+    <link rel="stylesheet" href="{% static 'vidios/css/style.css' %}" />
+  </head>
+  <body>
+    <header class="site-banner">
+      <div class="banner-content">
+        <img src="{% static 'vidios/images/logo.jpg' %}" alt="Logo" class="banner-logo" />
+        <h1 class="banner-title">Lecture Search System</h1>
+      </div>
+    </header>
+    <div class="container">
+      <form method="get" class="search-form">
+        <input
+          type="text"
+          name="lecturer"
+          placeholder="Lecturer"
+          value="{{ filter.lecturer }}"
+        />
+
+        <input
+          type="text"
+          name="title"
+          placeholder="Lecture Title"
+          value="{{ filter.title }}"
+        />
+
+        <select name="date_range">
+          <option value="">Select Period</option>
+          {% for m in months %}
+            <option
+              value="{{ m }}"
+              {% if filter.date_range|stringformat:"s" == m|stringformat:"s" %}
+                selected
+              {% endif %}
+            >
+              Within {{ m }} months
+            </option>
+          {% endfor %}
+        </select>
+
+        <fieldset>
+          <legend>Topic Selection</legend>
+          {% for topic in all_topics %}
+            <label>
+              <input
+                type="checkbox"
+                name="topics"
+                value="{{ topic.name }}"
+                {% if topic.name in filter.topics %}checked{% endif %}
+              />
+              {{ topic.name }}
+            </label>
+          {% endfor %}
+        </fieldset>
+
+        <button type="submit">Search</button>
+      </form>
+
+      <ul class="lectures-list">
+        {% for lec in lectures %}
+          <li>
+            <h3>{{ lec.lecture_title }}</h3>
+            <p>
+              {{ lec.lecture_date }} |
+              Lecturers: {{ lec.lecturers.all|join:", " }} |
+              Topics: {{ lec.lecture_topics.all|join:", " }}
+            </p>
+          </li>
+        {% empty %}
+          <li>No lectures under the given condition.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </body>
+</html>
