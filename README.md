@@ -1,1 +1,1 @@
-회의 중입니다.
+Django archiving service demo.
